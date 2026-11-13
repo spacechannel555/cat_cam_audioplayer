@@ -15,10 +15,21 @@
         section {
             margin-top: 115px;
         }
+        #audio-prompt {
+            margin-top: 20px;
+        }
+        #enable-audio {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <h1>Hover Over Me!!!! :D</h1>
+    <div id = "audio-prompt">
+        <button id = "enable-audio">Enable Audio 🔊</button>
+    </div>
     <section>
         <img id= "cat-cam" src="cat_cam_reg.jpg" width="292.5" height="285" alt="Cat Cam Talking Closed Mouth">
     </section>
@@ -39,6 +50,12 @@
 
         const bgm = document.getElementById("club-classics");
 
+        const audioPrompt = document.getElementById("audio-prompt");
+        
+        const enableAudio = document.getElementById("enable-audio");
+
+        let audioEnabled = false;
+
         let currentIndex = 0;
         let slideInterval = null;
 
@@ -49,14 +66,27 @@
             img.src = src;
         });
 
+        enableAudio.addEventListener("click", async () => {
+            try {
+                await bgm.play();
+                audioEnabled = true;
+                bgm.pause();
+                audioPrompt.style.display = "none";
+            } catch (error) {
+                console.log("Unable to enable audio:", error);
+            }
+        });
+        
         catCam.addEventListener("mouseenter", () => {
             currentIndex = 0;
             catCam.src = slides[currentIndex].img;
             document.body.style.backgroundColor = slides[currentIndex].bg;
 
-            bgm.play().catch(error => {
-                console.log("Audio playback error:", error);
-            });
+            if (audioEnabled) {
+                bgm.play().catch(error => {
+                    console.log("Audio Playback Error:", error);
+                });
+            }
 
             slideInterval = setInterval(() => {
                 currentIndex = (currentIndex + 1) % slides.length;
